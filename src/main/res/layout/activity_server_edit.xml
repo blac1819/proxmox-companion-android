@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txt_edit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_add_server"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Server Nickname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server Nickname"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g. Home Lab PVE"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_muted"
+            android:background="@drawable/bg_card_elevated"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:inputType="text"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Host and Port row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Host / IP Address"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/edit_host"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="192.168.1.100 or pve.local"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:inputType="textUri" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Port"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/edit_port"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="8006"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Authentication Mode -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Authentication Mode"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <RadioGroup
+            android:id="@+id/rg_auth_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/rb_auth_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="API Token (Recommended - never expires)"
+                android:textColor="@color/text_primary"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rb_auth_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username and Password (Ticket)"
+                android:textColor="@color/text_primary" />
+        </RadioGroup>
+
+        <!-- Fields for API Token -->
+        <LinearLayout
+            android:id="@+id/layout_token_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User with Realm (e.g. root@pam or monitoring@pve)"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/edit_token_user"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="root@pam"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
+                android:background="@drawable/bg_card_elevated"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Token ID (e.g. app or mobile)"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/edit_token_id"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="app"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
+                android:background="@drawable/bg_card_elevated"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Token Secret (UUID from PVE)"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/edit_token_secret"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
+                android:background="@drawable/bg_card_elevated"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:inputType="textPassword"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+
+        <!-- Fields for User / Password -->
+        <LinearLayout
+            android:id="@+id/layout_password_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Username"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/edit_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="root"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:background="@drawable/bg_card_elevated"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Realm"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/edit_realm"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="pam"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:background="@drawable/bg_card_elevated"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/edit_password"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Password"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
+                android:background="@drawable/bg_card_elevated"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:inputType="textPassword"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+
+        <!-- Trust Self-Signed SSL Certificates Checkbox -->
+        <CheckBox
+            android:id="@+id/cb_trust_ssl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trust Self-Signed SSL Certificates (Default for Proxmox VE)"
+            android:textColor="@color/text_primary"
+            android:checked="true"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Test Connection Button -->
+        <Button
+            android:id="@+id/btn_test_connection"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="🔍 Test Connection"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Result / status of test -->
+        <TextView
+            android:id="@+id/txt_test_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btn_save_server"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Save Server Profile"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_primary"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Delete Profile Button (only when editing) -->
+        <Button
+            android:id="@+id/btn_delete_server"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Delete Profile"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_danger"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>

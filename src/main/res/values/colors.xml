@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#E57000</color>
+    <color name="colorPrimaryDark">#C55D00</color>
+    <color name="colorAccent">#FF8C00</color>
+
+    <color name="bg_dark">#121212</color>
+    <color name="bg_card">#1E1E1E</color>
+    <color name="bg_card_elevated">#282828</color>
+    <color name="bg_card_border">#383838</color>
+    
+    <color name="text_primary">#F0F0F0</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="text_muted">#777777</color>
+    
+    <color name="status_running">#2ECC71</color>
+    <color name="status_stopped">#7F8C8D</color>
+    <color name="status_paused">#F39C12</color>
+    <color name="status_error">#E74C3C</color>
+    
+    <color name="gauge_good">#2ECC71</color>
+    <color name="gauge_warn">#F39C12</color>
+    <color name="gauge_crit">#E74C3C</color>
+    <color name="gauge_track">#333333</color>
+    
+    <color name="button_power_start">#27AE60</color>
+    <color name="button_power_shutdown">#D35400</color>
+    <color name="button_power_stop">#C0392B</color>
+    <color name="button_power_reboot">#2980B9</color>
+    <color name="button_secondary">#3A3A3A</color>
+    
+    <color name="tab_selected">#FF8C00</color>
+    <color name="tab_unselected">#888888</color>
+    
+    <color name="divider">#2A2A2A</color>
+</resources>

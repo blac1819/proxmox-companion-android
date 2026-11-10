@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/bg_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <Button
+            android:id="@+id/btn_lxc_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="←"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginLeft="12dp">
+
+            <TextView
+                android:id="@+id/txt_lxc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Container Details"
+                android:textColor="@color/text_primary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_lxc_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Node: pve | CT ID: 200"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/badge_lxc_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RUNNING"
+            android:textColor="@color/status_running"
+            android:background="@drawable/bg_badge_running"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_lxc_loading"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Power Actions Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Power &amp; Control"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_lxc_start"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="▶ Start"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:background="@drawable/btn_success"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_lxc_shutdown"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="⏸ Shutdown"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_lxc_stop"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="⏹ Stop"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:background="@drawable/btn_danger"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_lxc_reboot"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="↻ Reboot"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:background="@drawable/btn_secondary" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_lxc_console"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="🖥 Web / Console"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:background="@drawable/btn_primary"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- Resource Usage Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Live Resource Usage"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- CPU Meter -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="CPU Usage"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/txt_lxc_cpu_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0%"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/bar_lxc_cpu"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_horizontal_pve"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Memory Meter -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Memory (RAM)"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/txt_lxc_mem_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 MB / 0 MB"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/bar_lxc_mem"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_horizontal_pve"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Swap Meter -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Swap"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/txt_lxc_swap_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 MB / 0 MB"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/bar_lxc_swap"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_horizontal_pve"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Disk Meter -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Root Disk"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/txt_lxc_disk_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 GB / 0 GB"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/bar_lxc_disk"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_horizontal_pve"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Uptime -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Uptime"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/txt_lxc_uptime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Configuration / Container Specs Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Configuration &amp; Network"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/txt_lxc_config_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Loading configuration..." />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

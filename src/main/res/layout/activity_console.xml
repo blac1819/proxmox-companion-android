@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="@color/bg_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <Button
+            android:id="@+id/btn_console_back"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="←"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+
+        <TextView
+            android:id="@+id/txt_console_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="https://..."
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
+
+        <Button
+            android:id="@+id/btn_console_refresh"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="↻"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <Button
+            android:id="@+id/btn_console_external"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="↗"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_console"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone" />
+
+    <WebView
+        android:id="@+id/webview_console"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000" />
+</LinearLayout>

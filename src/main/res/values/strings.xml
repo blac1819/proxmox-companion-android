@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Proxmox Companion</string>
+    <string name="title_servers">Servers</string>
+    <string name="title_nodes">Nodes</string>
+    <string name="title_vms">Virtual Machines</string>
+    <string name="title_lxc">LXC Containers</string>
+    <string name="title_storage">Storage</string>
+    <string name="title_tasks">Cluster Tasks</string>
+    <string name="title_add_server">Add Proxmox Server</string>
+    <string name="title_edit_server">Edit Proxmox Server</string>
+    
+    <string name="action_refresh">Refresh</string>
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_test">Test Connection</string>
+    <string name="action_console">Web Console</string>
+    
+    <string name="power_start">Start</string>
+    <string name="power_shutdown">Shutdown</string>
+    <string name="power_stop">Stop (Force)</string>
+    <string name="power_reboot">Reboot</string>
+    <string name="power_reset">Reset</string>
+    <string name="power_suspend">Suspend</string>
+    <string name="power_resume">Resume</string>
+    
+    <string name="confirm_title">Confirm Action</string>
+    <string name="confirm_stop_msg">Are you sure you want to forcibly stop %1$s (%2$s)? This may cause filesystem corruption in the guest.</string>
+    <string name="confirm_shutdown_msg">Send graceful ACPI shutdown signal to %1$s (%2$s)?</string>
+    <string name="confirm_reboot_msg">Reboot %1$s (%2$s)?</string>
+    <string name="confirm_reset_msg">Hard reset %1$s (%2$s)?</string>
+    <string name="confirm_delete_server_msg">Remove server profile "%1$s"?</string>
+    
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_running">Running</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_paused">Paused</string>
+    
+    <string name="auth_token">API Token (Recommended)</string>
+    <string name="auth_password">User / Password Ticket</string>
+    
+    <string name="empty_servers">No servers configured. Tap + to add your Proxmox VE server.</string>
+    <string name="empty_nodes">No nodes found or server is unreachable.</string>
+    <string name="empty_vms">No virtual machines found.</string>
+    <string name="empty_lxc">No LXC containers found.</string>
+    <string name="empty_storage">No storage pools found.</string>
+    <string name="empty_tasks">No recent tasks found.</string>
+</resources>

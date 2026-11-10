@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/bg_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <Button
+            android:id="@+id/btn_task_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="←"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginLeft="12dp">
+
+            <TextView
+                android:id="@+id/txt_task_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Task Output"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_task_upid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UPID:..."
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/badge_task_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:textColor="@color/status_running"
+            android:background="@drawable/bg_badge_running"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_marginRight="6dp" />
+
+        <Button
+            android:id="@+id/btn_task_refresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="↻"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_task_loading"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <!-- Terminal Output -->
+    <ScrollView
+        android:id="@+id/scroll_terminal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0C0C0C"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/txt_terminal_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textColor="#E0E0E0"
+            android:textSize="12sp"
+            android:lineSpacingExtra="2dp"
+            android:textIsSelectable="true"
+            android:text="Fetching task log..." />
+    </ScrollView>
+</LinearLayout>

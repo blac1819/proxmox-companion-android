@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/bg_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:elevation="4dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@string/app_name" />
+
+        <!-- Server Selector Spinner -->
+        <Spinner
+            android:id="@+id/spinner_servers"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_card_elevated" />
+
+        <!-- Manage / Add Server Button -->
+        <Button
+            android:id="@+id/btn_manage_servers"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="⚙"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <!-- Web Console Button -->
+        <Button
+            android:id="@+id/btn_web_console"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="🌐"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <!-- Refresh Button -->
+        <Button
+            android:id="@+id/btn_refresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="↻"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
+    </LinearLayout>
+
+    <!-- Top Navigation Tabs (Horizontal Scroll) -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#181818"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layout_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <Button
+                android:id="@+id/tab_nodes"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="🖥 Nodes"
+                android:textSize="13sp"
+                android:textColor="@color/colorAccent"
+                android:background="@drawable/btn_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/tab_vms"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="📦 QEMU VMs"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/btn_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/tab_lxc"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="🧊 LXC CTs"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/btn_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/tab_storage"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="💾 Storage"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/btn_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/tab_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="📋 Tasks"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/btn_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Loading Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <!-- Error / Status Message Banner -->
+    <LinearLayout
+        android:id="@+id/layout_error_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#33E74C3C"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txt_error_banner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFAAAA"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="Retry"
+            android:textSize="11sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_danger" />
+    </LinearLayout>
+
+    <!-- Main Content List with Scroll -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/layout_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Empty state placeholder -->
+            <TextView
+                android:id="@+id/txt_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="40dp"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp"
+                android:text="@string/empty_servers" />
+
+            <!-- Dynamic cards are added here programmatically -->
+            <LinearLayout
+                android:id="@+id/layout_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
