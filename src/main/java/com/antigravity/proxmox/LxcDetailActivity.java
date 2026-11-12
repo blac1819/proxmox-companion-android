@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.List;
 
 public class LxcDetailActivity extends Activity {
     public static final String EXTRA_LXC_ID = "vmid";
@@ -141,8 +142,286 @@ public class LxcDetailActivity extends Activity {
             }
         });
 
+        setupFileTransferAndSnapshots();
         loadLxcDetails();
     }
+
+    private TextView txtPorts;
+    private EditText editFilePath;
+    private LinearLayout layoutSnapshots;
+
+    private void setupFileTransferAndSnapshots() {
+        txtPorts = findViewById(R.id.txt_lxc_ports);
+        editFilePath = findViewById(R.id.edit_lxc_file_path);
+        layoutSnapshots = findViewById(R.id.layout_lxc_snapshots);
+
+        Button btnDownload = findViewById(R.id.btn_lxc_file_download);
+        Button btnUpload = findViewById(R.id.btn_lxc_file_upload);
+        Button btnNewSnapshot = findViewById(R.id.btn_lxc_create_snapshot);
+
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String path = editFilePath.getText().toString().trim();
+                if (path.isEmpty()) {
+                    Toast.makeText(LxcDetailActivity.this, "Enter container file path", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                progressLoading.setVisibility(View.VISIBLE);
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final String content = client.readLxcFile(nodeName, vmid, path);
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressLoading.setVisibility(View.GONE);
+                                    showFileContentDialog(path, content);
+                                }
+                            });
+                        } catch (final Exception e) {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressLoading.setVisibility(View.GONE);
+                                    Toast.makeText(LxcDetailActivity.this, "Download failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String path = editFilePath.getText().toString().trim();
+                if (path.isEmpty()) {
+                    Toast.makeText(LxcDetailActivity.this, "Enter target file path", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showUploadDialog(path);
+            }
+        });
+
+        btnNewSnapshot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCreateSnapshotDialog();
+            }
+        });
+    }
+
+    private void showFileContentDialog(final String path, final String content) {
+        ScrollView sv = new ScrollView(this);
+        TextView tv = new TextView(this);
+        tv.setText(content);
+        tv.setFontFeatureSettings("monospace");
+        tv.setTextColor(0xFFEDEDED);
+        tv.setTextIsSelectable(true);
+        tv.setPadding(30, 20, 30, 20);
+        sv.addView(tv);
+
+        new AlertDialog.Builder(this)
+                .setTitle("📄 " + path)
+                .setView(sv)
+                .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        android.content.ClipboardManager cm = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(android.content.ClipData.newPlainText("File Content", content));
+                        Toast.makeText(LxcDetailActivity.this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Close", null)
+                .show();
+    }
+
+    private void showUploadDialog(final String path) {
+        final EditText input = new EditText(this);
+        input.setHint("Paste or type text to write into " + path);
+        input.setTextColor(0xFFFFFFFF);
+        input.setPadding(30, 30, 30, 30);
+        input.setMinLines(5);
+
+        new AlertDialog.Builder(this)
+                .setTitle("⬆ Write to Container: " + path)
+                .setView(input)
+                .setPositiveButton("Write", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String data = input.getText().toString();
+                        progressLoading.setVisibility(View.VISIBLE);
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    client.writeLxcFile(nodeName, vmid, path, data);
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressLoading.setVisibility(View.GONE);
+                                            Toast.makeText(LxcDetailActivity.this, "File written successfully!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } catch (final Exception e) {
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressLoading.setVisibility(View.GONE);
+                                            Toast.makeText(LxcDetailActivity.this, "Write failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showCreateSnapshotDialog() {
+        final EditText input = new EditText(this);
+        input.setHint("Snapshot Name (e.g. backup_before_update)");
+        input.setTextColor(0xFFFFFFFF);
+        input.setPadding(30, 30, 30, 30);
+
+        new AlertDialog.Builder(this)
+                .setTitle("📸 Take Snapshot")
+                .setView(input)
+                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String snapName = input.getText().toString().trim();
+                        if (snapName.isEmpty()) return;
+                        progressLoading.setVisibility(View.VISIBLE);
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    client.createSnapshot(nodeName, vmid, true, snapName, "Created from Android app", false);
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressLoading.setVisibility(View.GONE);
+                                            Toast.makeText(LxcDetailActivity.this, "Snapshot created!", Toast.LENGTH_SHORT).show();
+                                            loadSnapshots();
+                                        }
+                                    });
+                                } catch (final Exception e) {
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressLoading.setVisibility(View.GONE);
+                                            Toast.makeText(LxcDetailActivity.this, "Snapshot failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void loadSnapshots() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final List<com.antigravity.proxmox.model.GuestSnapshot> snaps = client.getSnapshots(nodeName, vmid, true);
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            renderSnapshots(snaps);
+                        }
+                    });
+                } catch (Exception ignored) {}
+            }
+        });
+    }
+
+    private void renderSnapshots(List<com.antigravity.proxmox.model.GuestSnapshot> snaps) {
+        layoutSnapshots.removeAllViews();
+        if (snaps == null || snaps.isEmpty()) {
+            TextView empty = new TextView(this);
+            empty.setText("No snapshots taken yet.");
+            empty.setTextColor(0xFF888888);
+            empty.setTextSize(11f);
+            layoutSnapshots.addView(empty);
+            return;
+        }
+
+        for (final com.antigravity.proxmox.model.GuestSnapshot s : snaps) {
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setPadding(0, 8, 0, 8);
+            row.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+            TextView txt = new TextView(this);
+            txt.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            txt.setText(s.getName() + "\n" + com.antigravity.proxmox.util.FormatUtils.formatTimestamp(s.getTimestamp()));
+            txt.setTextColor(0xFFEDEDED);
+            txt.setTextSize(11f);
+            row.addView(txt);
+
+            Button btnRollback = new Button(this);
+            btnRollback.setText("↺ Rollback");
+            btnRollback.setTextSize(10f);
+            btnRollback.setBackgroundResource(R.drawable.btn_secondary);
+            btnRollback.setTextColor(0xFFFFFFFF);
+            btnRollback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmRollback(s.getName());
+                }
+            });
+            row.addView(btnRollback);
+
+            layoutSnapshots.addView(row);
+        }
+    }
+
+    private void confirmRollback(final String snapName) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Rollback")
+                .setMessage("Rollback container " + vmid + " to snapshot '" + snapName + "'?")
+                .setPositiveButton("Rollback", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    client.rollbackSnapshot(nodeName, vmid, true, snapName);
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(LxcDetailActivity.this, "Rollback triggered!", Toast.LENGTH_SHORT).show();
+                                            loadLxcDetails();
+                                        }
+                                    });
+                                } catch (final Exception e) {
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(LxcDetailActivity.this, "Rollback failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+    }
+
 
     private void loadLxcDetails() {
         progressLoading.setVisibility(View.VISIBLE);

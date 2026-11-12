@@ -79,6 +79,13 @@ public class TaskLogActivity extends Activity {
             }
         });
 
+        findViewById(R.id.btn_task_ai).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analyzeLogWithAi();
+            }
+        });
+
         fetchLog();
     }
 
@@ -138,6 +145,63 @@ public class TaskLogActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void analyzeLogWithAi() {
+        final String currentLog = txtTerminal.getText().toString();
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_ai_assistant, null);
+        final EditText editPrompt = dialogView.findViewById(R.id.edit_ai_prompt);
+        final TextView txtResponse = dialogView.findViewById(R.id.txt_ai_response);
+        final ProgressBar progressBar = dialogView.findViewById(R.id.progress_ai);
+        final Button btnAsk = dialogView.findViewById(R.id.btn_ai_ask);
+
+        editPrompt.setText("Analyze this Proxmox task execution output, diagnose any failures, and provide the command to fix it.");
+
+        final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle("🤖 Proxmox Task Diagnostic")
+                .setView(dialogView)
+                .setNegativeButton("Close", null)
+                .create();
+
+        btnAsk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String prompt = editPrompt.getText().toString().trim();
+                progressBar.setVisibility(View.VISIBLE);
+                btnAsk.setEnabled(false);
+                txtResponse.setText("Analyzing task logs with Gemini AI...");
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        com.antigravity.proxmox.storage.AppSettings settings = new com.antigravity.proxmox.storage.AppSettings(TaskLogActivity.this);
+                        com.antigravity.proxmox.api.GeminiClient gemini = new com.antigravity.proxmox.api.GeminiClient(settings.getGeminiApiKey(), settings.getGeminiModel());
+                        try {
+                            final String answer = gemini.askAssistant(prompt, "Task: " + actionName + " (Status: " + status + ")\nLog:\n" + currentLog);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnAsk.setEnabled(true);
+                                    txtResponse.setText(answer);
+                                }
+                            });
+                        } catch (final Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnAsk.setEnabled(true);
+                                    txtResponse.setText("Error: " + e.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        dialog.show();
     }
 
     @Override

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_create_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="←"
+                android:textSize="20sp"
+                android:textColor="@color/text_primary"
+                android:background="@drawable/btn_secondary" />
+
+            <TextView
+                android:id="@+id/txt_create_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Virtual Machine / Container"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="12dp" />
+        </LinearLayout>
+
+        <!-- Guest Type Selector -->
+        <RadioGroup
+            android:id="@+id/rg_guest_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
+
+            <RadioButton
+                android:id="@+id/rb_type_lxc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🧊 LXC Container"
+                android:textColor="@color/text_primary"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rb_type_vm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="📦 QEMU VM"
+                android:textColor="@color/text_primary" />
+        </RadioGroup>
+
+        <!-- Target Node -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Target Node"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/spinner_create_node"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_card_elevated"
+            android:layout_marginBottom="10dp" />
+
+        <!-- VMID & Name Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VM / CT ID"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_vmid"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:hint="100"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hostname / VM Name"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:hint="my-server"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- OS Template / ISO field -->
+        <TextView
+            android:id="@+id/txt_label_os"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OS Template / ISO"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/edit_create_os"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:hint="local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_muted"
+            android:background="@drawable/bg_card_elevated"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Cores and RAM row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CPU Cores"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_cores"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:text="2"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Memory (MB)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_memory"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:text="2048"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Storage & Disk Size row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Storage Pool"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_storage"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:text="local-lvm"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disk (GB)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_create_disk"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:text="16"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Password (for LXC) -->
+        <LinearLayout
+            android:id="@+id/layout_lxc_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Root Password"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/edit_create_password"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:hint="Container root password"
+                android:textColor="@color/text_primary"
+                android:background="@drawable/bg_card_elevated"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_create"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_submit_create"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Create Guest"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_primary" />
+
+    </LinearLayout>
+</ScrollView>

@@ -67,6 +67,16 @@
             android:layout_marginRight="6dp" />
 
         <Button
+            android:id="@+id/btn_task_ai"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="🤖"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <Button
             android:id="@+id/btn_task_refresh"
             android:layout_width="40dp"
             android:layout_height="40dp"

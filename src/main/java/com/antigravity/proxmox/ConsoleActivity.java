@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.*;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.antigravity.proxmox.model.ServerProfile;
@@ -46,8 +47,16 @@ public class ConsoleActivity extends Activity {
         Button btnBack = findViewById(R.id.btn_console_back);
         Button btnRefresh = findViewById(R.id.btn_console_refresh);
         Button btnExternal = findViewById(R.id.btn_console_external);
+        Button btnAi = findViewById(R.id.btn_console_ai);
 
         txtUrl.setText(currentUrl);
+
+        btnAi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAiDialog();
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +127,64 @@ public class ConsoleActivity extends Activity {
         if (currentUrl != null && !currentUrl.isEmpty()) {
             webView.loadUrl(currentUrl);
         }
+    }
+
+    private void showAiDialog() {
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_ai_assistant, null);
+        final EditText editPrompt = dialogView.findViewById(R.id.edit_ai_prompt);
+        final TextView txtResponse = dialogView.findViewById(R.id.txt_ai_response);
+        final ProgressBar progressBar = dialogView.findViewById(R.id.progress_ai);
+        final Button btnAsk = dialogView.findViewById(R.id.btn_ai_ask);
+
+        editPrompt.setHint("e.g. Generate command to install Caddy, or fix failed package manager lock");
+
+        final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle("🤖 Terminal AI Assistant")
+                .setView(dialogView)
+                .setNegativeButton("Close", null)
+                .create();
+
+        btnAsk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String prompt = editPrompt.getText().toString().trim();
+                if (prompt.isEmpty()) return;
+
+                progressBar.setVisibility(View.VISIBLE);
+                btnAsk.setEnabled(false);
+                txtResponse.setText("Generating command / solution...");
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        com.antigravity.proxmox.storage.AppSettings settings = new com.antigravity.proxmox.storage.AppSettings(ConsoleActivity.this);
+                        com.antigravity.proxmox.api.GeminiClient gemini = new com.antigravity.proxmox.api.GeminiClient(settings.getGeminiApiKey(), settings.getGeminiModel());
+                        try {
+                            final String answer = gemini.askAssistant(prompt, "Active Console URL: " + currentUrl);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnAsk.setEnabled(true);
+                                    txtResponse.setText(answer);
+                                }
+                            });
+                        } catch (final Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnAsk.setEnabled(true);
+                                    txtResponse.setText("Error: " + e.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        dialog.show();
     }
 
     @Override

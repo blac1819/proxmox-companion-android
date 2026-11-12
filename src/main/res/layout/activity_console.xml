@@ -48,6 +48,26 @@
             android:layout_marginRight="6dp" />
 
         <Button
+            android:id="@+id/btn_console_ai"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="🤖"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <Button
+            android:id="@+id/btn_console_xterm"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="🖥"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary"
+            android:layout_marginRight="6dp" />
+
+        <Button
             android:id="@+id/btn_console_external"
             android:layout_width="36dp"
             android:layout_height="36dp"

@@ -10,10 +10,11 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+import com.antigravity.proxmox.FormatUtils;
 import com.antigravity.proxmox.api.ProxmoxClient;
 import com.antigravity.proxmox.model.*;
 import com.antigravity.proxmox.storage.ProfileManager;
-import com.antigravity.proxmox.util.FormatUtils;
+import com.antigravity.proxmox.R;
 
 import java.util.ArrayList;
 import java.util.List;

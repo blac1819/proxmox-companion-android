@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Proxmox XTerm Console</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
+  <style>
+    body, html { margin:0; height:100%; background:#000; }
+    #terminal { width:100%; height:100%; }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+  <script>
+    const term = new Terminal({cursorBlink: true});
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal'));
+    fitAddon.fit();
+
+    // The Android app will replace {{WEBSOCKET_URL}} placeholder via string replace before loading.
+    const wsUrl = "{{WEBSOCKET_URL}}";
+    const socket = new WebSocket(wsUrl);
+    socket.binaryType = "arraybuffer";
+
+    socket.onopen = () => {
+      term.writeln('Connected to Proxmox console');
+    };
+    socket.onmessage = (event) => {
+      const data = new Uint8Array(event.data);
+      const text = new TextDecoder().decode(data);
+      term.write(text);
+    };
+    socket.onclose = () => {
+      term.writeln('\r\n[Disconnected]');
+    };
+    socket.onerror = (e) => {
+      term.writeln('\r\n[Error] ' + e.message);
+    };
+
+    term.onData(data => {
+      if (socket.readyState === WebSocket.OPEN) {
+        const bytes = new TextEncoder().encode(data);
+        socket.send(bytes);
+      }
+    });
+  </script>
+</body>
+</html>
