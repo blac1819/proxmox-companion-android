@@ -149,7 +149,12 @@ public class VmDetailActivity extends Activity {
         loadVmDetails();
     }
 
+    private TextView txtVmPorts;
+
     private void loadVmDetails() {
+        if (txtVmPorts == null) {
+            txtVmPorts = findViewById(R.id.txt_vm_ports);
+        }
         progressLoading.setVisibility(View.VISIBLE);
         executor.execute(new Runnable() {
             @Override
@@ -157,12 +162,16 @@ public class VmDetailActivity extends Activity {
                 try {
                     final VmInfo vm = client.getVmStatus(nodeName, vmid);
                     final JSONObject config = client.getVmConfig(nodeName, vmid);
+                    // Best-effort: requires QEMU guest agent running inside VM
+                    final java.util.List<com.antigravity.proxmox.model.GuestPortInfo> ports =
+                            client.getVmListeningPorts(nodeName, vmid);
 
                     if (isDestroyed) return;
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             updateUi(vm, config);
+                            updatePortsUi(ports);
                         }
                     });
                 } catch (final Exception e) {
@@ -177,6 +186,23 @@ public class VmDetailActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void updatePortsUi(java.util.List<com.antigravity.proxmox.model.GuestPortInfo> ports) {
+        if (txtVmPorts == null) return;
+        if (ports == null || ports.isEmpty()) {
+            txtVmPorts.setText("No listening ports found (requires QEMU guest agent running)");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (com.antigravity.proxmox.model.GuestPortInfo p : ports) {
+            sb.append(p.getProtocol().toUpperCase())
+              .append("  :").append(p.getPort())
+              .append("  ").append(p.getLocalAddress())
+              .append("  [").append(p.getProcessName()).append("]")
+              .append("\n");
+        }
+        txtVmPorts.setText(sb.toString().trim());
     }
 
     private void updateUi(VmInfo vm, JSONObject config) {

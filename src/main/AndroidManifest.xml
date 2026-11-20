@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -57,6 +59,29 @@
             android:name=".TaskLogActivity"
             android:exported="false"
             android:label="Task Log" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".CreateGuestActivity"
+            android:exported="false"
+            android:label="Create VM / Container"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".CommunityScriptsActivity"
+            android:exported="false"
+            android:label="Community Scripts" />
+
+        <activity
+            android:name=".StorageCreateActivity"
+            android:exported="false"
+            android:label="Add Storage Pool"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 </manifest>

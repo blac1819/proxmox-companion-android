@@ -431,12 +431,16 @@ public class LxcDetailActivity extends Activity {
                 try {
                     final LxcInfo lxc = client.getLxcStatus(nodeName, vmid);
                     final JSONObject config = client.getLxcConfig(nodeName, vmid);
+                    // Fetch listening ports (best-effort — may be empty if guest-exec unavailable)
+                    final List<com.antigravity.proxmox.model.GuestPortInfo> ports =
+                            client.getLxcListeningPorts(nodeName, vmid);
 
                     if (isDestroyed) return;
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             updateUi(lxc, config);
+                            updatePortsUi(ports);
                         }
                     });
                 } catch (final Exception e) {
@@ -451,6 +455,23 @@ public class LxcDetailActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void updatePortsUi(List<com.antigravity.proxmox.model.GuestPortInfo> ports) {
+        if (txtPorts == null) return;
+        if (ports == null || ports.isEmpty()) {
+            txtPorts.setText("No listening ports found (requires running container + guest exec access)");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (com.antigravity.proxmox.model.GuestPortInfo p : ports) {
+            sb.append(p.getProtocol().toUpperCase())
+              .append("  :").append(p.getPort())
+              .append("  ").append(p.getLocalAddress())
+              .append("  [").append(p.getProcessName()).append("]")
+              .append("\n");
+        }
+        txtPorts.setText(sb.toString().trim());
     }
 
     private void updateUi(LxcInfo lxc, JSONObject config) {

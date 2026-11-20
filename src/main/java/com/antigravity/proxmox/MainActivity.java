@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
     private Button btnManageServers;
     private Button btnWebConsole;
     private Button btnRefresh;
+    private Button btnSettings;
+    private Button btnCreateGuest;
+    private Button btnCommunityScripts;
 
     private Button tabNodes;
     private Button tabVms;
@@ -75,6 +78,9 @@ public class MainActivity extends Activity {
         btnManageServers = findViewById(R.id.btn_manage_servers);
         btnWebConsole = findViewById(R.id.btn_web_console);
         btnRefresh = findViewById(R.id.btn_refresh);
+        btnSettings = findViewById(R.id.btn_settings);
+        btnCreateGuest = findViewById(R.id.btn_create_guest);
+        btnCommunityScripts = findViewById(R.id.btn_community_scripts);
 
         tabNodes = findViewById(R.id.tab_nodes);
         tabVms = findViewById(R.id.tab_vms);
@@ -170,6 +176,31 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 refreshData();
+            }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            }
+        });
+
+        btnCreateGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentProfile != null) {
+                    startActivity(new Intent(MainActivity.this, CreateGuestActivity.class));
+                } else {
+                    Toast.makeText(MainActivity.this, "Configure a server first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnCommunityScripts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CommunityScriptsActivity.class));
             }
         });
 
@@ -504,6 +535,30 @@ public class MainActivity extends Activity {
                 break;
 
             case TAB_STORAGE:
+                // "Add Storage Pool" action button at top
+                {
+                    Button btnAddStorage = new Button(this);
+                    btnAddStorage.setText("➕ Add Storage Pool");
+                    btnAddStorage.setTextSize(13f);
+                    btnAddStorage.setTextColor(0xFFFFFFFF);
+                    btnAddStorage.setBackgroundResource(R.drawable.btn_secondary);
+                    btnAddStorage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (currentProfile != null) {
+                                startActivity(new Intent(MainActivity.this, StorageCreateActivity.class));
+                            } else {
+                                Toast.makeText(MainActivity.this, "Configure a server first", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(
+                            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 4, 0, 12);
+                    btnAddStorage.setLayoutParams(lp);
+                    layoutItems.addView(btnAddStorage);
+                }
                 if (cachedStorage.isEmpty()) {
                     showEmpty(getString(R.string.empty_storage));
                 } else {

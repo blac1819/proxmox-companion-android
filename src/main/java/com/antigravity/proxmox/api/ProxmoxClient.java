@@ -358,17 +358,86 @@ public class ProxmoxClient {
     }
 
     /**
-     * Retrieves listening ports and processes for an LXC container via ss / netstat.
+     * Retrieves listening ports and processes for an LXC container via ss -tulpn (guest-exec).
+     * Returns a list of GuestPortInfo parsed from the command output.
      */
     public List<GuestPortInfo> getLxcListeningPorts(String nodeName, int vmid) {
+        return runSsCommandAndParse(nodeName, vmid, true);
+    }
+
+    /**
+     * Retrieves listening ports and processes for a QEMU VM via ss -tulpn (guest-exec / qemu-agent).
+     * Requires the QEMU guest agent to be running inside the VM.
+     */
+    public List<GuestPortInfo> getVmListeningPorts(String nodeName, int vmid) {
+        return runSsCommandAndParse(nodeName, vmid, false);
+    }
+
+    /**
+     * Shared helper: runs "ss -tulpn" via guest-exec on an LXC or QEMU guest
+     * and returns parsed port information.
+     */
+    private List<GuestPortInfo> runSsCommandAndParse(String nodeName, int vmid, boolean isLxc) {
         List<GuestPortInfo> list = new ArrayList<>();
-        // In Proxmox, /nodes/{node}/lxc/{vmid}/status/current gives network stats, and we can query via execute
-        // We provide a fallback parser for common sockets
         try {
-            // Attempt to query guest open ports or socket interfaces
-            String url = profile.getBaseUrl() + "/api2/json/nodes/" + URLEncoder.encode(nodeName, "UTF-8") + "/lxc/" + vmid + "/interfaces";
-            JSONObject resp = executeRequest("GET", url, null, true);
-            // Default ports often populated on active CTs
+            String guestType = isLxc ? "lxc" : "qemu";
+            String execUrl = profile.getBaseUrl()
+                    + "/api2/json/nodes/" + URLEncoder.encode(nodeName, "UTF-8")
+                    + "/" + guestType + "/" + vmid + "/exec";
+
+            // Start the command
+            String postData = "command=ss%20-tulpn";
+            JSONObject execResp = executeRequest("POST", execUrl, postData, true);
+            String pid = "";
+            JSONObject execData = execResp.optJSONObject("data");
+            if (execData != null) {
+                pid = execData.optString("pid", "");
+            }
+            if (pid.isEmpty()) return list;
+
+            // Poll exec-status until finished (max 5 attempts, 1-second apart)
+            String statusUrl = profile.getBaseUrl()
+                    + "/api2/json/nodes/" + URLEncoder.encode(nodeName, "UTF-8")
+                    + "/" + guestType + "/" + vmid + "/exec-status?pid=" + URLEncoder.encode(pid, "UTF-8");
+            String output = "";
+            for (int attempt = 0; attempt < 5; attempt++) {
+                Thread.sleep(1000);
+                JSONObject statusResp = executeRequest("GET", statusUrl, null, true);
+                JSONObject statusData = statusResp.optJSONObject("data");
+                if (statusData != null && statusData.optBoolean("exited", false)) {
+                    output = statusData.optString("out-data", "");
+                    break;
+                }
+            }
+            if (output.isEmpty()) return list;
+
+            // Parse ss output: lines like "tcp   LISTEN  0  128  0.0.0.0:22  0.0.0.0:*  users:((\"sshd\",pid=1234,fd=3))"
+            String[] lines = output.split("\\n");
+            for (String line : lines) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("Netid") || line.startsWith("State")) continue;
+                String[] parts = line.split("\\s+");
+                if (parts.length < 5) continue;
+                String proto = parts[0]; // tcp/udp
+                String localAddr = parts.length > 4 ? parts[4] : "";
+                String port = "";
+                if (localAddr.contains(":")) {
+                    port = localAddr.substring(localAddr.lastIndexOf(':') + 1);
+                }
+                String process = "";
+                if (parts.length > 6) {
+                    // Extract process name from users:(("name",pid=X,...))
+                    String usersSection = parts[parts.length - 1];
+                    int nameStart = usersSection.indexOf("((\"");
+                    int nameEnd = usersSection.indexOf("\"", nameStart + 3);
+                    if (nameStart >= 0 && nameEnd > nameStart) {
+                        process = usersSection.substring(nameStart + 3, nameEnd);
+                    }
+                }
+                if (!port.isEmpty()) {
+                    list.add(new GuestPortInfo(proto, port, localAddr, process));
+                }
+            }
         } catch (Exception ignored) {}
         return list;
     }
