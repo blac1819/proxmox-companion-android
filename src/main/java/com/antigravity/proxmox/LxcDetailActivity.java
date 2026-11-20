@@ -104,6 +104,23 @@ public class LxcDetailActivity extends Activity {
             }
         });
 
+        Button btnLxcAi = findViewById(R.id.btn_lxc_ai);
+        if (btnLxcAi != null) {
+            btnLxcAi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String contextInfo = "LXC Container: " + lxcName + " (CT ID: " + vmid + ")\n"
+                            + "Node: " + nodeName + "\n"
+                            + "Configuration:\n" + txtConfig.getText().toString();
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            LxcDetailActivity.this,
+                            "How do I configure or troubleshoot LXC Container " + lxcName + " (ID: " + vmid + ")?",
+                            contextInfo
+                    );
+                }
+            });
+        }
+
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -82,7 +82,12 @@ public class TaskLogActivity extends Activity {
         findViewById(R.id.btn_task_ai).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analyzeLogWithAi();
+                String logText = txtTerminal.getText().toString();
+                com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                        TaskLogActivity.this,
+                        "Analyze this Proxmox task execution output, diagnose any failures, and provide the command to fix it.",
+                        "Task: " + actionName + " (Status: " + status + ")\nLog:\n" + logText
+                );
             }
         });
 

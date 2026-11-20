@@ -101,6 +101,23 @@ public class VmDetailActivity extends Activity {
             }
         });
 
+        Button btnVmAi = findViewById(R.id.btn_vm_ai);
+        if (btnVmAi != null) {
+            btnVmAi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String contextInfo = "QEMU Virtual Machine: " + vmName + " (ID: " + vmid + ")\n"
+                            + "Node: " + nodeName + "\n"
+                            + "Configuration:\n" + txtConfig.getText().toString();
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            VmDetailActivity.this,
+                            "How can I optimize or troubleshoot VM " + vmName + " (ID: " + vmid + ")?",
+                            contextInfo
+                    );
+                }
+            });
+        }
+
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

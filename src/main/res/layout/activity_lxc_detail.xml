@@ -61,7 +61,17 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
+            android:paddingBottom="4dp"
+            android:layout_marginRight="8dp" />
+
+        <Button
+            android:id="@+id/btn_lxc_ai"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="🤖"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/btn_secondary" />
     </LinearLayout>
 
     <ProgressBar

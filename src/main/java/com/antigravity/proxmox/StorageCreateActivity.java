@@ -56,6 +56,21 @@ public class StorageCreateActivity extends Activity {
             }
         });
 
+        Button btnStorageAi = findViewById(R.id.btn_storage_ai);
+        if (btnStorageAi != null) {
+            btnStorageAi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String selectedType = storageTypes.get(spinnerType.getSelectedItemPosition());
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            StorageCreateActivity.this,
+                            "How do I correctly configure a " + selectedType.toUpperCase() + " storage pool on Proxmox?",
+                            "Storage Type: " + selectedType + "\nContext: Proxmox storage pool creation (NFS/SMB/ZFS/Directory)"
+                    );
+                }
+            });
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, storageTypes);
         spinnerType.setAdapter(adapter);
 

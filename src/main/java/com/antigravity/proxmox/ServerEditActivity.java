@@ -73,6 +73,20 @@ public class ServerEditActivity extends Activity {
 
         TextView txtTitle = findViewById(R.id.txt_edit_title);
 
+        Button btnServerAi = findViewById(R.id.btn_server_ai);
+        if (btnServerAi != null) {
+            btnServerAi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            ServerEditActivity.this,
+                            "How do I create a Proxmox API Token with proper permissions, or troubleshoot connecting to port 8006?",
+                            "Host: " + editHost.getText().toString() + "\nPort: " + editPort.getText().toString()
+                    );
+                }
+            });
+        }
+
         String serverId = getIntent().getStringExtra(EXTRA_SERVER_ID);
         if (serverId != null && !serverId.isEmpty()) {
             currentProfile = profileManager.getProfileById(serverId);

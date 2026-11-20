@@ -6,8 +6,13 @@ import android.content.SharedPreferences;
 public class AppSettings {
     private static final String PREF_NAME = "proxmox_app_settings";
 
+    public static final String BACKEND_GEMINI = "gemini";
+    public static final String BACKEND_LOCAL = "local";
+
+    private static final String KEY_AI_BACKEND = "ai_backend";
     private static final String KEY_GEMINI_KEY = "gemini_api_key";
     private static final String KEY_GEMINI_MODEL = "gemini_model";
+    private static final String KEY_LOCAL_AI_URL = "local_ai_url";
     private static final String KEY_POLL_INTERVAL = "poll_interval_sec";
     private static final String KEY_DARK_MODE = "dark_mode_enabled";
     private static final String KEY_TIMEOUT_SEC = "conn_timeout_sec";
@@ -16,6 +21,14 @@ public class AppSettings {
 
     public AppSettings(Context context) {
         this.prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public String getAiBackend() {
+        return prefs.getString(KEY_AI_BACKEND, BACKEND_GEMINI);
+    }
+
+    public void setAiBackend(String backend) {
+        prefs.edit().putString(KEY_AI_BACKEND, backend).apply();
     }
 
     public String getGeminiApiKey() {
@@ -27,11 +40,23 @@ public class AppSettings {
     }
 
     public String getGeminiModel() {
-        return prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash");
+        String m = prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash");
+        if ("gemini-1.5-flash".equals(m) || "gemini-1.5-pro".equals(m)) {
+            return "gemini-2.5-flash";
+        }
+        return m;
     }
 
     public void setGeminiModel(String model) {
         prefs.edit().putString(KEY_GEMINI_MODEL, model).apply();
+    }
+
+    public String getLocalAiUrl() {
+        return prefs.getString(KEY_LOCAL_AI_URL, "http://127.0.0.1:11434/v1/chat/completions");
+    }
+
+    public void setLocalAiUrl(String url) {
+        prefs.edit().putString(KEY_LOCAL_AI_URL, url != null ? url.trim() : "").apply();
     }
 
     public int getPollIntervalSec() {

@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🤖 Gemini AI Terminal Assistant"
+                android:text="🤖 AI Terminal Assistant"
                 android:textColor="@color/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -58,44 +58,122 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enables intelligent log diagnostics, command generation, and terminal troubleshooting using Google Gemini."
+                android:text="Intelligent Proxmox command generation, log troubleshooting, and system diagnostics."
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:layout_marginBottom="12dp" />
 
+            <!-- AI Engine Selector RadioGroup -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gemini API Key"
+                android:text="AI Provider / Backend"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp" />
 
-            <EditText
-                android:id="@+id/edit_gemini_key"
+            <RadioGroup
+                android:id="@+id/rg_ai_backend"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="AIzaSy..."
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_muted"
-                android:background="@drawable/bg_card_elevated"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:inputType="textPassword"
-                android:layout_marginBottom="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Model"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
-            <Spinner
-                android:id="@+id/spinner_gemini_model"
+                <RadioButton
+                    android:id="@+id/rb_backend_gemini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google Gemini (Cloud)"
+                    android:textColor="@color/text_primary"
+                    android:checked="true"
+                    android:layout_marginRight="16dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_backend_local"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Local Model (Phone / Ollama)"
+                    android:textColor="@color/text_primary" />
+            </RadioGroup>
+
+            <!-- Gemini Cloud Config Section -->
+            <LinearLayout
+                android:id="@+id/layout_gemini_config"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_card_elevated"
-                android:layout_marginBottom="6dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gemini API Key"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_gemini_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="AIzaSy..."
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:inputType="textPassword"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gemini Model"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_gemini_model"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_card_elevated"
+                    android:layout_marginBottom="6dp" />
+            </LinearLayout>
+
+            <!-- Local Model Config Section -->
+            <LinearLayout
+                android:id="@+id/layout_local_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Local AI Endpoint URL (OpenAI / Ollama)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/edit_local_ai_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="http://127.0.0.1:11434/v1/chat/completions"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:inputType="textUri"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Connects to Ollama, llama.cpp server, or LocalAI running locally on your phone (e.g. via Termux/AGY) or on your LAN."
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"
+                    android:layout_marginBottom="6dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Polling & Performance Card -->

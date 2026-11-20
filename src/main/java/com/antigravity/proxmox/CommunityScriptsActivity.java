@@ -50,7 +50,11 @@ public class CommunityScriptsActivity extends Activity {
         findViewById(R.id.btn_scripts_ai).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAiAssistantDialog(null);
+                com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                        CommunityScriptsActivity.this,
+                        "What helper script should I use to install Plex, Home Assistant, Pi-hole, or Docker on Proxmox?",
+                        "Browsing Tteck Proxmox Community Helper Scripts catalog"
+                );
             }
         });
 
@@ -122,7 +126,12 @@ public class CommunityScriptsActivity extends Activity {
             btnExplain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showAiAssistantDialog(script);
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            CommunityScriptsActivity.this,
+                            "What does the " + script.getName() + " helper script do and what are its system prerequisites?",
+                            "Script Name: " + script.getName() + "\nCategory: " + script.getCategory()
+                                    + "\nCommand: " + script.getCommand()
+                    );
                 }
             });
 

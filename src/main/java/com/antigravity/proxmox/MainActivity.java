@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
     private Button btnSettings;
     private Button btnCreateGuest;
     private Button btnCommunityScripts;
+    private Button btnMainAi;
 
     private Button tabNodes;
     private Button tabVms;
@@ -81,6 +82,7 @@ public class MainActivity extends Activity {
         btnSettings = findViewById(R.id.btn_settings);
         btnCreateGuest = findViewById(R.id.btn_create_guest);
         btnCommunityScripts = findViewById(R.id.btn_community_scripts);
+        btnMainAi = findViewById(R.id.btn_main_ai);
 
         tabNodes = findViewById(R.id.tab_nodes);
         tabVms = findViewById(R.id.tab_vms);
@@ -201,6 +203,18 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, CommunityScriptsActivity.class));
+            }
+        });
+
+        btnMainAi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String serverName = currentProfile != null ? currentProfile.getName() : "None";
+                String serverUrl = currentProfile != null ? currentProfile.getBaseUrl() : "None";
+                String contextInfo = "Proxmox Server: " + serverName + " (" + serverUrl + ")\n"
+                        + "Cached Nodes: " + cachedNodes.size() + ", VMs: " + cachedVms.size()
+                        + ", LXCs: " + cachedLxc.size() + ", Storage: " + cachedStorage.size();
+                com.antigravity.proxmox.ui.AiAssistantDialog.show(MainActivity.this, null, contextInfo);
             }
         });
 

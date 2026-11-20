@@ -54,7 +54,11 @@ public class ConsoleActivity extends Activity {
         btnAi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAiDialog();
+                com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                        ConsoleActivity.this,
+                        null,
+                        "Active Console URL: " + currentUrl
+                );
             }
         });
 

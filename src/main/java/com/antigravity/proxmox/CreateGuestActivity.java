@@ -68,6 +68,22 @@ public class CreateGuestActivity extends Activity {
             }
         });
 
+        Button btnCreateAi = findViewById(R.id.btn_create_ai);
+        if (btnCreateAi != null) {
+            btnCreateAi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isLxc = rbLxc.isChecked();
+                    String guestType = isLxc ? "LXC Container" : "QEMU Virtual Machine";
+                    com.antigravity.proxmox.ui.AiAssistantDialog.show(
+                            CreateGuestActivity.this,
+                            "What are recommended CPU, RAM, and storage settings for creating a new " + guestType + "?",
+                            "Target: Proxmox " + guestType + " creation\nOS / Template field: " + editOs.getText().toString()
+                    );
+                }
+            });
+        }
+
         rgType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
