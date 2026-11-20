@@ -1,19 +1,78 @@
 package com.antigravity.proxmox.storage;
 
+import android.content.Context;
 import com.antigravity.proxmox.model.CommunityScript;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommunityScriptCatalog {
     private static final List<CommunityScript> SCRIPTS = new ArrayList<>();
+    private static boolean isLoaded = false;
 
-    static {
+    /**
+     * Initializes the full catalog from the bundled 480+ community scripts JSON asset.
+     */
+    public static synchronized void ensureLoaded(Context context) {
+        if (isLoaded && !SCRIPTS.isEmpty()) return;
+
+        try {
+            InputStream is = context.getAssets().open("community_scripts.json");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+
+            JSONArray array = new JSONArray(sb.toString());
+            SCRIPTS.clear();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String name = obj.optString("name", "");
+                String desc = obj.optString("description", "");
+                String category = obj.optString("category", "LXC");
+                String command = obj.optString("command", "");
+                String iconUrl = obj.optString("iconUrl", "");
+                String docsUrl = obj.optString("documentationUrl", "");
+
+                if (!name.isEmpty() && !command.isEmpty()) {
+                    SCRIPTS.add(new CommunityScript(name, desc, category, command, iconUrl, docsUrl));
+                }
+            }
+            isLoaded = true;
+        } catch (Exception e) {
+            // Fallback to essential built-in scripts if asset read fails
+            if (SCRIPTS.isEmpty()) {
+                loadFallbackScripts();
+            }
+            isLoaded = true;
+        }
+
+        Collections.sort(SCRIPTS, new Comparator<CommunityScript>() {
+            @Override
+            public int compare(CommunityScript a, CommunityScript b) {
+                return a.getName().compareToIgnoreCase(b.getName());
+            }
+        });
+    }
+
+    private static void loadFallbackScripts() {
         SCRIPTS.add(new CommunityScript(
                 "Home Assistant OS",
                 "Home Assistant open-source home automation platform running as a highly optimized QEMU VM.",
                 "VM",
                 "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/vm/haos-vm.sh)\"",
-                "https://community-scripts.org/icons/homeassistant.png",
+                "",
                 "https://www.home-assistant.io"
         ));
         SCRIPTS.add(new CommunityScript(
@@ -21,7 +80,7 @@ public class CommunityScriptCatalog {
                 "Pre-configured Debian container with Docker Engine and Docker Compose V2 pre-installed and ready.",
                 "LXC",
                 "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/docker.sh)\"",
-                "https://community-scripts.org/icons/docker.png",
+                "",
                 "https://docs.docker.com"
         ));
         SCRIPTS.add(new CommunityScript(
@@ -29,80 +88,16 @@ public class CommunityScriptCatalog {
                 "Network-wide ad blocking via DNS sinkhole running in a lightweight Alpine/Debian LXC.",
                 "LXC",
                 "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/pihole.sh)\"",
-                "https://community-scripts.org/icons/pihole.png",
+                "",
                 "https://pi-hole.net"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "AdGuard Home LXC",
-                "Network-wide software for blocking ads and tracking, with parental control and DNS over HTTPS/TLS.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/adguard.sh)\"",
-                "https://community-scripts.org/icons/adguard.png",
-                "https://adguard.com"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Nginx Proxy Manager LXC",
-                "Expose web services securely with free Let's Encrypt SSL certificates and an easy-to-use web UI.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/nginxproxymanager.sh)\"",
-                "https://community-scripts.org/icons/nginxproxymanager.png",
-                "https://nginxproxymanager.com"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Plex Media Server LXC",
-                "Media server organizing video, music, and photos with hardware transcoding support (Intel QSV / NVENC).",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/plex.sh)\"",
-                "https://community-scripts.org/icons/plex.png",
-                "https://plex.tv"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Jellyfin LXC",
-                "100% Free and open-source media system without tracking, subscriptions, or paywalls.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/jellyfin.sh)\"",
-                "https://community-scripts.org/icons/jellyfin.png",
-                "https://jellyfin.org"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Tailscale LXC",
-                "Mesh VPN based on WireGuard making cross-device connectivity and homelab access seamless without port-forwarding.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/tailscale.sh)\"",
-                "https://community-scripts.org/icons/tailscale.png",
-                "https://tailscale.com"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Nextcloud LXC",
-                "Self-hosted productivity platform providing private cloud file sync, calendar, contacts, and docs.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/nextcloud.sh)\"",
-                "https://community-scripts.org/icons/nextcloud.png",
-                "https://nextcloud.com"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Vaultwarden LXC",
-                "Lightweight Bitwarden-compatible password manager backend written in Rust.",
-                "LXC",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/vaultwarden.sh)\"",
-                "https://community-scripts.org/icons/vaultwarden.png",
-                "https://github.com/dani-garcia/vaultwarden"
         ));
         SCRIPTS.add(new CommunityScript(
                 "Proxmox Post-Install Helper",
                 "Enables pve-no-subscription repository, disables enterprise nag popup, updates sources, and installs tools.",
                 "Tools",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/tools/pve-post-install.sh)\"",
+                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/tools/pve/post-pve-install.sh)\"",
                 "",
-                "https://community-scripts.org"
-        ));
-        SCRIPTS.add(new CommunityScript(
-                "Proxmox CPU Scaling Governor",
-                "Configures energy-saving CPU scaling governor (powersave / conservative / performance) across cores.",
-                "Tools",
-                "bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/tools/scaling-governor.sh)\"",
-                "",
-                "https://community-scripts.org"
+                "https://community-scripts.github.io/ProxmoxVE/"
         ));
     }
 
@@ -115,7 +110,9 @@ public class CommunityScriptCatalog {
         String q = query != null ? query.toLowerCase().trim() : "";
         for (CommunityScript s : SCRIPTS) {
             boolean matchesCategory = (category == null || category.equalsIgnoreCase("All") || s.getCategory().equalsIgnoreCase(category));
-            boolean matchesQuery = q.isEmpty() || s.getName().toLowerCase().contains(q) || s.getDescription().toLowerCase().contains(q);
+            boolean matchesQuery = q.isEmpty()
+                    || s.getName().toLowerCase().contains(q)
+                    || s.getDescription().toLowerCase().contains(q);
             if (matchesCategory && matchesQuery) {
                 filtered.add(s);
             }

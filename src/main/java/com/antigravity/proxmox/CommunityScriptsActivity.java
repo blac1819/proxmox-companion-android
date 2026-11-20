@@ -40,6 +40,8 @@ public class CommunityScriptsActivity extends Activity {
         spinnerCategory = findViewById(R.id.spinner_category);
         layoutList = findViewById(R.id.layout_scripts_list);
 
+        CommunityScriptCatalog.ensureLoaded(this);
+
         findViewById(R.id.btn_scripts_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -48,6 +48,7 @@ aapt2 compile --dir src/main/res -o "$BUILD_DIR/resources.zip"
 echo "[3/6] Linking resources and generating R.java..."
 aapt2 link -I "$ANDROID_JAR" \
     --manifest src/main/AndroidManifest.xml \
+    -A src/main/assets \
     -o "$BUILD_DIR/base.apk" \
     --java "$BUILD_DIR/gen" \
     "$BUILD_DIR/resources.zip" \
